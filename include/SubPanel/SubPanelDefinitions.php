@@ -537,16 +537,18 @@ class aSubPanel
         global $beanFiles ;
 
         $module_name = $this->get_module_name() ;
-        if (! empty($module_name)) {
-            $bean_name = $beanList [ $this->get_module_name() ] ;
+        if (!empty($module_name)) {
+            $bean_name = $beanList [ $this->get_module_name() ];
+            $this->bean_name = $bean_name;
 
-            $this->bean_name = $bean_name ;
-
-            include_once($beanFiles [ $bean_name ]) ;
-            $this->template_instance = new $bean_name() ;
-            $this->template_instance->force_load_details = true ;
-            $this->table_name = $this->template_instance->table_name ;
-            //$this->db_fields=$this->template_instance->column_fields;
+            if (!file_exists($beanFiles [ $bean_name ])) {
+                $GLOBALS['log']->fatal("FILE DOES NOT EXISTS:".$beanFiles [ $bean_name ]." Module Name:".$module_name);
+            } else {
+                include_once($beanFiles [ $bean_name ]);
+                $this->template_instance = new $bean_name() ;
+                $this->template_instance->force_load_details = true;
+                $this->table_name = $this->template_instance->table_name;
+            }
         }
     }
     //this function is to be used only with sub-panels that are based

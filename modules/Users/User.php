@@ -680,7 +680,11 @@ class User extends Person implements EmailInterface
 
         if (!$this->verify_data()) {
             SugarApplication::appendErrorMessage($this->error_string);
-            return SugarApplication::redirect('Location: index.php?action=Error&module=Users');
+            /**
+             * BUG FIX: Cecropia bugfix/CRM-316-user-profile---missing-validation
+             * Removed 'Location:...' from the redirect call which caused the issue
+             */
+            return SugarApplication::redirect('index.php?action=Error&module=Users');
         }
 
 
@@ -708,11 +712,19 @@ class User extends Person implements EmailInterface
             if (!$this->change_password($_POST['old_password'], $_POST['new_password'])) {
                 if (isset($_POST['page']) && $_POST['page'] === 'EditView') {
                     SugarApplication::appendErrorMessage($this->error_string);
-                    SugarApplication::redirect("Location: index.php?action=EditView&module=Users&record=" . $_POST['record']);
+                    /**
+                     * BUG FIX: Cecropia bugfix/CRM-316-user-profile---missing-validation
+                     * Removed 'Location:...' from the redirect call which caused the issue
+                     */
+                    SugarApplication::redirect("index.php?action=EditView&module=Users&record=" . $_POST['record']);
                 }
                 if (isset($_POST['page']) && $_POST['page'] === 'Change') {
                     SugarApplication::appendErrorMessage($this->error_string);
-                    SugarApplication::redirect("Location: index.php?action=ChangePassword&module=Users&record=" . $_POST['record']);
+                    /**
+                     * BUG FIX: Cecropia bugfix/CRM-316-user-profile---missing-validation
+                     * Removed 'Location:...' from the redirect call which caused the issue
+                     */
+                    SugarApplication::redirect("index.php?action=ChangePassword&module=Users&record=" . $_POST['record']);
                 }
             }
         }
